@@ -1,131 +1,205 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0"/>
     <meta http-equiv="cache-control" content="no-cache"/>
-	<title>OBOOBS+</title>
-	<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" title="no title">
-	<script type="text/javascript" charset="utf-8" src="js/cordova-1.7.0.js"></script>
+    <title>OBOOBS+</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" title="no title">
+    <script type="text/javascript" charset="utf-8" src="js/cordova-1.7.0.js"></script>
 </head>
 <body>
-	<nav class="hidden">
-		<div id="about">About app</div>
-		<ul>
-			<li id="favorite">Favorites</li>
-			<li id="by_date">Latest</li>
-			<li id="by_rank">The best</li>
-			<li id="by_interest">Debating</li>
-			<li id="noise" class="checked">Random</li>
-		</ul>
-	</nav>
-	<div id="content">
-		<div id="topbar" class="hidden">
-			<div id="btn_menu">Menu</div>
-			<div id="title"></div>
-			<div id="btn_favorite">&hearts;</div>
-		</div>
-		<div id="gallery"></div>
-		<div id="votebar" class="hidden">
-			<div id="add">+</div>
-			<div id="rank"></div>
-			<div id="sub">−</div>
-		</div>
-	</div>
-	<div id="about_box" class="hidden">
-	    Developed by<br>
-	    <strong>Maxim Grach</strong><br>
-	    <a href="mailto:mvgrach@gmail.com">mvgrach@gmail.com</a><br>
-	    <small>special for oboobs.ru</small><br>
-	    <small>v1.2</small>
-	</div>
+    <nav class="hidden">
+        <div id="about">About app</div>
+        <ul>
+            <li id="favorite">Favorites</li>
+            <li id="by_date">Latest</li>
+            <li id="by_rank">The best</li>
+            <li id="by_interest">Debating</li>
+            <li id="noise" class="checked">Random</li>
+        </ul>
+    </nav>
+    <div id="content">
+        <div id="topbar" class="hidden">
+            <div id="btn_menu">Menu</div>
+            <div id="title"></div>
+            <div id="btn_favorite">&hearts;</div>
+        </div>
+        <div id="gallery"></div>
+        <div id="votebar" class="hidden">
+            <div id="add">+</div>
+            <div id="rank"></div>
+            <div id="sub">−</div>
+        </div>
+    </div>
+    <div id="about_box" class="hidden">
+        Developed by<br>
+        <strong>Maxim Grach</strong><br>
+        <a href="mailto:mvgrach@gmail.com">mvgrach@gmail.com</a><br>
+        <small>special for oboobs.ru</small><br>
+        <small>v1.2</small>
+    </div>
 </body>
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.gallery.js"></script>
 <script src="js/zepto.gallery.locale.js"></script>
 <script type="text/javascript" charset="utf-8">
-	(function(){
-	    document.addEventListener('deviceready', function(){
-	        var $gallery  = $('#gallery'),
-	            $btnMenu  = $('#btn_menu'),
-	            $content  = $('#content'),
-	            $aboutBox = $('#about_box'),
-	            $about    = $('#about'),
-	            $nav      = $('nav');
-	        
-	        var lang = function(){
-	                var lang;
-	                if (navigator && navigator.userAgent && (lang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
-	                    lang = lang[1];
-	                }
-	                if (!lang && navigator) {
-	                    lang = navigator.language.substr(0,2); 
-	                }
-	                return lang;
-	            }();
+    (function(){
+        document.addEventListener('deviceready', function(){
+            var $gallery  = $('#gallery'),
+                $btnMenu  = $('#btn_menu'),
+                $content  = $('#content'),
+                $aboutBox = $('#about_box'),
+                $about    = $('#about'),
+                $nav      = $('nav');
+            
+            var lang = function(){
+                    var lang;
+                    if (navigator && navigator.userAgent && (lang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
+                        lang = lang[1];
+                    }
+                    if (!lang && navigator) {
+                        lang = navigator.language.substr(0,2); 
+                    }
+                    return lang;
+                }();
 
-	        $gallery.gallery({locale:lang});
-	        $gallery.galleryShow({noise:true});
+            $gallery.gallery({locale:lang});
+            $gallery.galleryShow({noise:true});
 
-	        // Menu button event
-	        $btnMenu.on('tap',function(){
-	            $btnMenu.toggleClass('taped');
-	            $content.toggleClass('open-menu');
-	            $nav.toggleClass('hidden');
-	        });
+            // Save photo
+            $gallery.on('longTap','img',function(){
+                //var self = this;
+                //navigator.notification.confirm(
+                //    'Фотография будет сохранена в папку\n/download/oboobs/',
+                //    function(button){
+                        //alert('You selected button ' + button + ' ' + (typeof button));
+                //        if (button === 1) {
 
-	        // Menu events
-	        $nav.on('tap','li',function(){
-	            $nav.addClass('checked')
-	                .siblings()
-	                    .removeClass('checked');
-	            switch(this.id){
-	                case 'favorite':
-	                    $gallery.galleryShowFavorite();
-	                    break;
-	                case 'by_date':
-	                    $gallery.galleryShow();
-	                    break;
-	                case 'by_rank':
-	                    $gallery.galleryShow({order:'-rank'});
-	                    break;
-	                case 'by_interest':
-	                    $gallery.galleryShow({order:'-interest'});
-	                    break;
-	                case 'noise':
-	                    $gallery.galleryShow({noise:true});
-	                    break;
-	            }
-	            setTimeout(function(){
-	                $btnMenu.trigger('tap');
-	            },450);
-	        });
+                            var $title = $('#title').html('Сохранение…');
 
-	        // About box
-	        $about.on('tap', function(){
-	        	$aboutBox.removeClass('hidden');
-	        	$nav.addClass('hidden');
-	        	$content.removeClass('open-menu');
-	        });
+                            navigator.notification.vibrate(50);
 
-	        $aboutBox.on('tap', function(){
-	        	$aboutBox.addClass('hidden');
-	        });
+                            var remoteFile = this.src.replace('_preview',''),
+                                localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
 
-	        $('#about_box a').on('tap',function(a){
-	        	a.stopPropagation();
-	        });
-	        
-	        // Hardware Menu button event
-	        $(document).on('menubutton',function(){
-	            $btnMenu.trigger('tap');
-	        });
-	        
-	        // Preventing document drugging and fix swipe bug on ICS
-	        document.addEventListener('touchmove', function(event){
-	            event.preventDefault();
-	        }, false);
-	    }, true);
-	})();
+                            var ft = new FileTransfer();
+                            ft.download(remoteFile,
+                                '/sdcard/download/oboobs/'+localFileName,
+                                function(entry) {
+                                    $title.html('Сохранено в папке');
+                                    setTimeout(function(){
+                                        $title.html('/download/oboobs/')
+                                    },1500);
+                                }, function(error) {
+                                    $('#debug').html('DOWNLOAD ERROR: '+error.code);
+                                });
+                //        }
+                //    },
+                //    'Сохранить фото?',
+                //    'Сохранить,Нет'
+                //);
+
+                //var remoteFile = this.src.replace('_preview','');
+                //var remoteFile = 'http://media.oboobs.ru/boobs_preview/05986.jpg';
+                //var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
+                
+                /*window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+                    fileSystem.root.getFile(localFileName, {create: true, exclusive: false}, function(fileEntry) {
+                        var localPath = fileEntry.fullPath;
+                        console.log('*** LOCAL_PATH: '+localPath);
+                        if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
+                            localPath = localPath.substring(7);
+                        }
+                        var ft = new FileTransfer();
+                        ft.download(remoteFile,
+                            //localPath,
+                            '/mnt/sdcard/download/'+localFileName,
+                            function(entry) {
+                                console.log(entry.fullPath);
+                            }, fail1);
+                    }, fail2);
+                }, fail3);*/
+                /*var ft = new FileTransfer();
+                ft.download(remoteFile,
+                    //localPath,
+                    '/sdcard/download/oboobs/'+localFileName,
+                    function(entry) {
+                        //console.log(entry.fullPath);
+                        //$('#debug').html('Saved to /sdcard/download/')
+                        navigator.notification.alert('Сохранено в папке /download/oboobs/');
+                    }, fail1);
+                
+                function fail1(error) {
+                    console.log('*** DOWNLOAD ERROR: '+error.code);
+                }*/
+                /*function fail2(error) {
+                    console.log('*** GETFILE ERROR: '+error.code);
+                }
+                function fail3(error) {
+                    console.log('*** REQUESTFILESYSTEM ERROR: '+error.code);
+                }*/
+            });
+
+            // Menu button event
+            $btnMenu.on('tap',function(){
+                $btnMenu.toggleClass('taped');
+                $content.toggleClass('open-menu');
+                $nav.toggleClass('hidden');
+            });
+
+            // Menu events
+            $nav.on('tap','li',function(){
+                $nav.addClass('checked')
+                    .siblings()
+                        .removeClass('checked');
+                switch(this.id){
+                    case 'favorite':
+                        $gallery.galleryShowFavorite();
+                        break;
+                    case 'by_date':
+                        $gallery.galleryShow();
+                        break;
+                    case 'by_rank':
+                        $gallery.galleryShow({order:'-rank'});
+                        break;
+                    case 'by_interest':
+                        $gallery.galleryShow({order:'-interest'});
+                        break;
+                    case 'noise':
+                        $gallery.galleryShow({noise:true});
+                        break;
+                }
+                setTimeout(function(){
+                    $btnMenu.trigger('tap');
+                },450);
+            });
+
+            // About box
+            $about.on('tap', function(){
+                $aboutBox.removeClass('hidden');
+                $nav.addClass('hidden');
+                $content.removeClass('open-menu');
+            });
+
+            $aboutBox.on('tap', function(){
+                $aboutBox.addClass('hidden');
+            });
+
+            $('#about_box a').on('tap',function(a){
+                a.stopPropagation();
+            });
+            
+            // Hardware Menu button event
+            $(document).on('menubutton',function(){
+                $btnMenu.trigger('tap');
+            });
+            
+            // Preventing document drugging and fix swipe bug on ICS
+            document.addEventListener('touchmove', function(event){
+                event.preventDefault();
+            }, false);
+        }, true);
+    })();
 </script>
 </html>
