@@ -44,6 +44,71 @@
 <script src="js/zepto.gallery.js"></script>
 <script src="js/zepto.gallery.locale.js"></script>
 <script type="text/javascript" charset="utf-8">
-(function(){document.addEventListener("deviceready",function(){var c=$("#gallery"),b=function(){var a;if(navigator&&navigator.userAgent&&(a=navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i)))a=a[1];!a&&navigator&&(a=navigator.language.substr(0,2));return a}();c.gallery({locale:b});c.galleryShow({noise:!0});$(document).on("menubutton",function(){$("#btn_menu").trigger("tap")});document.addEventListener("touchmove",function(a){a.preventDefault()},!1)},!0);$("#btn_menu").on("tap",function(){$(this).toggleClass("taped");$("#content").toggleClass("open-menu");$("nav").toggleClass("hidden")});$("nav").on("tap","li",function(){var c=this.id,b=$("#gallery");$(this).addClass("checked").siblings().removeClass("checked");switch(c){case "favorite":b.galleryShowFavorite();break;case "by_date":b.galleryShow();break;case "by_rank":b.galleryShow({order:"-rank"});break;case "by_interest":b.galleryShow({order:"-interest"});break;case "noise":b.galleryShow({noise:!0})}setTimeout(function(){$("#btn_menu").trigger("tap")},450)});$("#about").on("tap",function(){$("#about_box").removeClass("hidden");$("nav").addClass("hidden");$("#content").removeClass("open-menu")});$("#about_box").on("tap",function(){$(this).addClass("hidden")});$("#about_box a").on("tap",function(a){a.stopPropagation()})})();
+	(function(){
+	    document.addEventListener('deviceready', function(){
+	        var $gallery = $('#gallery'),
+	            $btnMenu = $('#btn_menu'),
+	            $content = $('#content'),
+	            $nav     = $('nav');
+	        
+	        var lang = function(){
+	                var lang;
+	                if (navigator && navigator.userAgent && (lang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i))) {
+	                    lang = lang[1];
+	                }
+	                if (!lang && navigator) {
+	                    lang = navigator.language.substr(0,2); 
+	                }
+	                return lang;
+	            }();
+
+	        $gallery.gallery({locale:lang});
+	        $gallery.galleryShow({noise:true});
+
+	        // Menu button event
+	        $btnMenu.on('tap',function(){
+	            $btnMenu.toggleClass('taped');
+	            $content.toggleClass('open-menu');
+	            $nav.toggleClass('hidden');
+	        });
+
+	        // Menu events
+	        $nav.on('tap','li',function(){
+	            $nav.addClass('checked')
+	                .siblings()
+	                    .removeClass('checked');
+	            switch(this.id){
+	                case 'favorite':
+	                    $gallery.galleryShowFavorite();
+	                    break;
+	                case 'by_date':
+	                    $gallery.galleryShow();
+	                    break;
+	                case 'by_rank':
+	                    $gallery.galleryShow({order:'-rank'});
+	                    break;
+	                case 'by_interest':
+	                    $gallery.galleryShow({order:'-interest'});
+	                    break;
+	                case 'noise':
+	                    $gallery.galleryShow({noise:true});
+	                    break;
+	            }
+	            setTimeout(function(){
+	                $btnMenu.trigger('tap');
+	            },450);
+	        });
+	        
+	        // Hardware Menu button event
+	        $(document).on('menubutton',function(){
+	            $btnMenu.trigger('tap');
+	        });
+	        
+	        // Preventing document drugging and fix swipe bug on ICS
+	        document.addEventListener('touchmove', function(event){
+	            event.preventDefault();
+	        }, false);
+	    }, true);
+	})();
 </script>
 </html>
