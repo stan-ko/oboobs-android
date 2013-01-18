@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+	<title>OBOOBS+</title>
+	<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" title="no title">
+	<script type="text/javascript" charset="utf-8" src="js/cordova-1.7.0.js"></script>
+</head>
+<body>
+	<nav class="hidden">
+		<div id="about">About app</div>
+		<ul>
+			<li id="favorite">Favorites</li>
+			<li id="by_date">Latest</li>
+			<li id="by_rank">The best</li>
+			<li id="by_interest">Debating</li>
+			<li id="noise" class="checked">Random</li>
+		</ul>
+	</nav>
+	<div id="content">
+		<div id="topbar" class="hidden">
+			<div id="btn_menu">Menu</div>
+			<div id="title"></div>
+			<div id="btn_favorite">&hearts;</div>
+		</div>
+		<div id="gallery"></div>
+		<div id="votebar" class="hidden">
+			<div id="add">+</div>
+			<div id="rank"></div>
+			<div id="sub">−</div>
+		</div>
+	</div>
+	<div id="about_box" class="hidden">
+	    Developed by<br>
+	    <strong>Maxim Grach</strong><br>
+	    <a href="mailto:mvgrach@gmail.com">mvgrach@gmail.com</a><br>
+	    <small>special for oboobs.ru</small><br>
+	    <small>v1.2</small>
+	</div>
+</body>
+<script src="js/zepto.min.js"></script>
+<script src="js/zepto.gallery.js"></script>
+<script src="js/zepto.gallery.locale.js"></script>
+<script type="text/javascript" charset="utf-8">
+(function(){document.addEventListener("deviceready",function(){var c=$("#gallery"),b=function(){var a;if(navigator&&navigator.userAgent&&(a=navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i)))a=a[1];!a&&navigator&&(a=navigator.language.substr(0,2));return a}();c.gallery({locale:b});c.galleryShow({noise:!0});$(document).on("menubutton",function(){$("#btn_menu").trigger("tap")});document.addEventListener("touchmove",function(a){a.preventDefault()},!1)},!0);$("#btn_menu").on("tap",function(){$(this).toggleClass("taped");$("#content").toggleClass("open-menu");$("nav").toggleClass("hidden")});$("nav").on("tap","li",function(){var c=this.id,b=$("#gallery");$(this).addClass("checked").siblings().removeClass("checked");switch(c){case "favorite":b.galleryShowFavorite();break;case "by_date":b.galleryShow();break;case "by_rank":b.galleryShow({order:"-rank"});break;case "by_interest":b.galleryShow({order:"-interest"});break;case "noise":b.galleryShow({noise:!0})}setTimeout(function(){$("#btn_menu").trigger("tap")},450)});$("#about").on("tap",function(){$("#about_box").removeClass("hidden");$("nav").addClass("hidden");$("#content").removeClass("open-menu")});$("#about_box").on("tap",function(){$(this).addClass("hidden")});$("#about_box a").on("tap",function(a){a.stopPropagation()})})();
+</script>
+</html>
