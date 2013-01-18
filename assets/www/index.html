@@ -46,10 +46,12 @@
 <script type="text/javascript" charset="utf-8">
 	(function(){
 	    document.addEventListener('deviceready', function(){
-	        var $gallery = $('#gallery'),
-	            $btnMenu = $('#btn_menu'),
-	            $content = $('#content'),
-	            $nav     = $('nav');
+	        var $gallery  = $('#gallery'),
+	            $btnMenu  = $('#btn_menu'),
+	            $content  = $('#content'),
+	            $aboutBox = $('#about_box'),
+	            $about    = $('#about'),
+	            $nav      = $('nav');
 	        
 	        var lang = function(){
 	                var lang;
@@ -97,6 +99,21 @@
 	            setTimeout(function(){
 	                $btnMenu.trigger('tap');
 	            },450);
+	        });
+
+	        // About box
+	        $about.on('tap', function(){
+	        	$aboutBox.removeClass('hidden');
+	        	$nav.addClass('hidden');
+	        	$content.removeClass('open-menu');
+	        });
+
+	        $aboutBox.on('tap', function(){
+	        	$aboutBox.addClass('hidden');
+	        });
+
+	        $('#about_box a').on('tap',function(a){
+	        	a.stopPropagation();
 	        });
 	        
 	        // Hardware Menu button event

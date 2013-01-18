@@ -6,6 +6,39 @@ body{
     padding:0;
     height:100%;
 }
+#about{
+    color: #4a4a4a;
+    font-weight: 700;
+    line-height: 2.5em;
+    text-align:center;
+}
+#about_box{
+    background-color: rgba(0,0,0,.6);
+    color: #ccc;
+    font-size: 1.25em;
+    line-height: 1.75;
+    opacity: 1;
+    padding: 30% 1em;
+    position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    text-align: center;
+    z-index: 9999;
+    -webkit-transition: opacity .355s ease-out;
+            transition: opacity .355s ease-out;
+}
+#about_box.hidden{
+    opacity: 0;
+    z-index: -1;
+}
+#about_box strong{
+    font-size: 1.5em;
+}
+#about_box a{
+    color: #efefef
+}
 nav{
     background:#000;
     color:#efefef;
