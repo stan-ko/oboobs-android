@@ -1,4 +1,4 @@
-package com.lemuriformes.oboobsplus;
+package com.mgrach.oboobsplus;
 
 import android.os.Bundle;
 import org.apache.cordova.*;

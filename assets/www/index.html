@@ -37,12 +37,13 @@
         <strong>Maxim Grach</strong><br>
         <a href="mailto:mvgrach@gmail.com">mvgrach@gmail.com</a><br>
         <small>special for oboobs.ru</small><br>
-        <small>v1.2</small>
+        <small>v1.3</small>
     </div>
 </body>
 <script src="js/zepto.min.js"></script>
 <script src="js/zepto.gallery.js"></script>
 <script src="js/zepto.gallery.locale.js"></script>
+<script src="js/downloader.js"></script>
 <script type="text/javascript" charset="utf-8">
     (function(){
         document.addEventListener('deviceready', function(){
@@ -69,76 +70,39 @@
 
             // Save photo
             $gallery.on('longTap','img',function(){
-                //var self = this;
-                //navigator.notification.confirm(
-                //    'Фотография будет сохранена в папку\n/download/oboobs/',
-                //    function(button){
-                        //alert('You selected button ' + button + ' ' + (typeof button));
-                //        if (button === 1) {
+                var remoteFile = this.src.replace('_preview','');
 
-                            var $title = $('#title').html('Сохранение…');
+                var $title = $('#title'),
+                    title  = $title.text();
 
-                            navigator.notification.vibrate(50);
+                $title.html('Сохранение…');
 
-                            var remoteFile = this.src.replace('_preview',''),
-                                localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
+                navigator.notification.vibrate(50);
 
-                            var ft = new FileTransfer();
-                            ft.download(remoteFile,
-                                '/sdcard/download/oboobs/'+localFileName,
-                                function(entry) {
-                                    $title.html('Сохранено в папке');
-                                    setTimeout(function(){
-                                        $title.html('/download/oboobs/')
-                                    },1500);
-                                }, function(error) {
-                                    $('#debug').html('DOWNLOAD ERROR: '+error.code);
-                                });
-                //        }
-                //    },
-                //    'Сохранить фото?',
-                //    'Сохранить,Нет'
-                //);
-
-                //var remoteFile = this.src.replace('_preview','');
-                //var remoteFile = 'http://media.oboobs.ru/boobs_preview/05986.jpg';
-                //var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
-                
-                /*window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-                    fileSystem.root.getFile(localFileName, {create: true, exclusive: false}, function(fileEntry) {
-                        var localPath = fileEntry.fullPath;
-                        console.log('*** LOCAL_PATH: '+localPath);
-                        if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
-                            localPath = localPath.substring(7);
+                window.plugins.downloader.downloadFile(
+                    remoteFile,
+                    { overwrite: true, dirName: 'pictures/oboobs' },
+                    function (result) {
+                        if (!/сохр/i.test($title.text())) title = $title.text();
+                        $title.html('Сохранение…' + result.progress + '%');
+                        if (result.status == 1) {
+                            $title.html('Сохранена в папку');
+                            setTimeout(function(){
+                                $title.html('/pictures/oboobs');
+                                setTimeout(function(){
+                                    $title.html(title);
+                                },3000);
+                            },1500);
                         }
-                        var ft = new FileTransfer();
-                        ft.download(remoteFile,
-                            //localPath,
-                            '/mnt/sdcard/download/'+localFileName,
-                            function(entry) {
-                                console.log(entry.fullPath);
-                            }, fail1);
-                    }, fail2);
-                }, fail3);*/
-                /*var ft = new FileTransfer();
-                ft.download(remoteFile,
-                    //localPath,
-                    '/sdcard/download/oboobs/'+localFileName,
-                    function(entry) {
-                        //console.log(entry.fullPath);
-                        //$('#debug').html('Saved to /sdcard/download/')
-                        navigator.notification.alert('Сохранено в папке /download/oboobs/');
-                    }, fail1);
-                
-                function fail1(error) {
-                    console.log('*** DOWNLOAD ERROR: '+error.code);
-                }*/
-                /*function fail2(error) {
-                    console.log('*** GETFILE ERROR: '+error.code);
-                }
-                function fail3(error) {
-                    console.log('*** REQUESTFILESYSTEM ERROR: '+error.code);
-                }*/
+                        console.log(JSON.stringify(result));
+                    }, function (error) {
+                        $title.html('Упс… ошибка ' + error);
+                        setTimeout(function(){
+                            $title.html(title);
+                        },2000);
+                        console.error(error);
+                    }
+                );
             });
 
             // Menu button event
@@ -150,9 +114,8 @@
 
             // Menu events
             $nav.on('tap','li',function(){
-                $nav.addClass('checked')
-                    .siblings()
-                        .removeClass('checked');
+                $(this).addClass('checked')
+                       .siblings().removeClass('checked');
                 switch(this.id){
                     case 'favorite':
                         $gallery.galleryShowFavorite();
